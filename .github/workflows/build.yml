@@ -77,11 +77,11 @@ jobs:
     - name: Rename file(Linux)
       if: runner.os == 'Linux'
       run: |
-        mv aria2c aria2c-linux
+        pwd && cd /home/runner/work/aria2/aria2 && mv aria2c aria2c-linux
     - name: Rename file(macOS)
       if: runner.os == 'macOS'
       run: | 
-        mv aria2c aria2c-macos
+        pwd && cd /home/runner/work/aria2/aria2 && mv aria2c aria2c-macos
     - name: Upload Artifact(Linux)
       uses: actions/upload-artifact@v3
       if: runner.os == 'Linux'
