@@ -74,3 +74,23 @@ jobs:
     - name: Build aria2
       run: |
         make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
+    - name: Rename file(Linux)
+      if: runner.os == 'Linux'
+      run: |
+        mv aria2c aria2c-linux
+    - name: Rename file(macOS)
+      if: runner.os == 'macOS'
+      run: | 
+        mv aria2c aria2c-macos
+    - name: Upload Artifact(Linux)
+      uses: actions/upload-artifact@v3
+      if: runner.os == 'Linux'
+      with: 
+        name: upload-binary
+        path: aria2c-linux
+    - name: Upload Artifact(macOS)
+      uses: actions/upload-artifact@v3
+      if: runner.os == 'macOS'
+      with: 
+        name: upload-binary
+        path: aria2c-macos
