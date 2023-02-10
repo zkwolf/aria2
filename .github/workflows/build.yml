@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: MacOS setup
       run: |
-        brew install autoconf automake pkg-config libtool doctuils libxml2
+        brew install autoconf automake pkg-config libtool docutils libxml2
         export PATH=${PATH}:/usr/local/opt/gettext/bin
         export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
         export LDFLAGS="-L/usr/local/opt/libxml2/lib"
