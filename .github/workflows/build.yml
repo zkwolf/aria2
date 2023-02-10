@@ -34,8 +34,9 @@ jobs:
         export NON_RELEASE=1
         ln -s ../makerelease-osx.mk Makefile
         make
+        pwd
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with: 
         name: upload-binary
-        path: aria2/bin/aria2c
+        path: aria2c
