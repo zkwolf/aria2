@@ -251,13 +251,6 @@ all::
 		exit 1; \
 	fi
 
-# No dice without sphinx
-all::
-	@if test "x$$(which sphinx-build)" = "x"; then \
-		echo "sphinx-build not present"; \
-		exit 1; \
-	fi;
-
 deps::
 
 
@@ -377,57 +370,7 @@ aria2.build: aria2.x86_64.build
 	arch -64 $(ARIA2_PREFIX)/bin/aria2c -v
 	touch $@
 
-$(ARIA2_CHANGELOG): aria2.x86_64.build
-	git log --pretty=fuller --date=short $(PREV_TAG)..HEAD > $@
-
-$(ARIA2_DOCS): aria2.x86_64.build
-	cp -av $(SRCDIR)/$(@F) $@
-
-$(ARIA2_DIST).tar.bz2: aria2.build $(ARIA2_DOCS) $(ARIA2_CHANGELOG)
-	find $(ARIA2_PREFIX) -exec touch "{}" \;
-	gtar -cf $@ \
-		--use-compress-program="bzip2 -9" \
-		$(ARIA2)
-
-$(ARIA2_DIST).pkg: aria2.build $(ARIA2_DOCS) $(ARIA2_CHANGELOG)
-	find $(ARIA2_PREFIX) -exec touch "{}" \;
-	pkgbuild \
-		--root $(ARIA2) \
-		--identifier aria2 \
-		--version $(VERSION) \
-		--install-location /usr/local/aria2 \
-		--ownership recommended \
-		out.pkg
-	pkgbuild \
-		--root $(SRCDIR)/osx-package/etc \
-		--identifier aria2.paths \
-		--version $(VERSION) \
-		--install-location /etc \
-		--ownership recommended \
-		paths.pkg
-	echo "$$ARIA2_DISTXML" > dist.xml
-	productbuild \
-		--distribution dist.xml \
-		--resources $(ARIA2_PREFIX)/share/doc/aria2 \
-		$@
-	rm -rf out.pkg paths.pkg dist.xml
-
-$(ARIA2_DIST).dmg: $(ARIA2_DIST).pkg
-	-rm -rf dmg
-	mkdir -p dmg/Docs
-	cp -av $(ARIA2_DIST).pkg dmg/aria2.pkg
-	find $(ARIA2_PREFIX)/share/doc/aria2 -maxdepth 1 -type f -exec cp -av "{}" dmg/Docs \;
-	rm -rf dmg/Docs/README dmg/Docs/README.rst
-	cp $(SRCDIR)/osx-package/DS_Store dmg/.DS_Store
-	hdiutil create $@.uncompressed \
-		-srcfolder dmg \
-		-volname "aria2 $(VERSION) Intel" \
-		-ov
-	hdiutil convert -format UDBZ -o $@ $@.uncompressed.dmg
-	hdiutil flatten $@
-	rm -rf $@.uncompressed.dmg dmg
-
-dist.build: $(ARIA2_DIST).tar.bz2 $(ARIA2_DIST).pkg $(ARIA2_DIST).dmg
+dist.build:
 	echo 'Build success: $(ARIA2_DIST)'
 	touch $@
 

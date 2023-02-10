@@ -31,9 +31,6 @@ jobs:
       run: |
         mkdir build-release
         cd build-release
-        python3 -m venv .
-        source bin/activate
-        pip install -U sphinx
         export NON_RELEASE=1
         ln -s ../makerelease-osx.mk Makefile
         make
