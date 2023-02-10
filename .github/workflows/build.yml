@@ -77,7 +77,7 @@ jobs:
     - name: Rename file(Linux)
       if: runner.os == 'Linux'
       run: |
-        pwd && ls %% mv src/aria2c aria2c-linux
+        pwd && ls && mv src/aria2c aria2c-linux
     - name: Rename file(macOS)
       if: runner.os == 'macOS'
       run: | 
