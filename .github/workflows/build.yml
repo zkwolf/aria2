@@ -26,7 +26,7 @@ jobs:
         echo 'CXX=clang++' >> $GITHUB_ENV
     - name: Libtool
       run: |
-        autoreconf -i /opt/homebrew/share/aclocal/
+        autoreconf -i -I /opt/homebrew/share/aclocal/
     - name: Use Makefile
       run: |
         mkdir build-release
