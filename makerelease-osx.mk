@@ -370,14 +370,14 @@ aria2.build: aria2.x86_64.build
 	arch -64 $(ARIA2_PREFIX)/bin/aria2c -v
 	touch $@
 
-dist.build:
+dist.build: aria2.build
 	echo 'Build success: $(ARIA2_DIST)'
 	touch $@
 
 all:: dist.build
 
 clean-dist:
-	rm -rf $(ARIA2_DIST).tar.bz2 $(ARIA2_DIST).pkg $(ARIA2_DIST).dmg
+	rm -rf $(ARIA2_DIST).tar.bz2
 
 clean: clean-dist
 	rm -rf *aria2*
