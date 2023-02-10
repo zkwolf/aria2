@@ -33,7 +33,7 @@ jobs:
         cd build-release
         python3 -m venv .
         source bin/activate
-        pip install sphinx-build
+        pip install -U sphinx
         ln -s ../makerelease-os.mk Makefile
         make
     - name: Upload Artifact
