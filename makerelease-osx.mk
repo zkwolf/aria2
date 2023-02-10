@@ -101,7 +101,7 @@ export LDFLAGS
 LTO_FLAGS = -flto -ffunction-sections -fdata-sections
 
 # Dependency versions
-zlib_version = 1.2.11
+zlib_version = 1.2.13
 zlib_hash = c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1
 zlib_url = http://zlib.net/zlib-$(zlib_version).tar.gz
 
@@ -173,7 +173,7 @@ PREV_TAG := $(shell git describe --abbrev=0 $(THIS_TAG)~1)
 
 
 # Aria2 setup
-ARIA2 := aria2-$(VERSION)
+ARIA2 := aria2
 ARIA2_PREFIX := $(PWD)/$(ARIA2)
 ARIA2_DIST := $(PWD)/$(ARIA2)-osx-darwin$(BUILD)
 ARIA2_CONFFLAGS = \

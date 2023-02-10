@@ -6,93 +6,38 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-11]
-        compiler: [gcc, clang]
+        os: [macos-11]
+        compiler: [clang]
 
     runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v3
-    - name: Linux setup
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get install \
-          g++-11 \
-          clang-12 \
-          autoconf \
-          automake \
-          autotools-dev \
-          autopoint \
-          libtool \
-          pkg-config \
-          libssl-dev \
-          libc-ares-dev \
-          zlib1g-dev \
-          libsqlite3-dev \
-          libssh2-1-dev \
-          libcppunit-dev
     - name: MacOS setup
-      if: runner.os == 'macOS'
       run: |
-        brew install cppunit gettext openssl libssh2 c-ares sqlite3 \
-          autoconf automake pkg-config libtool
-    - name: Setup clang (Linux)
-      if: runner.os == 'Linux' && matrix.compiler == 'clang'
-      run: |
-        echo 'CC=clang-12' >> $GITHUB_ENV
-        echo 'CXX=clang++-12' >> $GITHUB_ENV
-    - name: Setup clang (MacOS)
-      if: runner.os == 'macOS' && matrix.compiler == 'clang'
+        brew install autoconf automake pkg-config libtool doctuils libxml2
+        export PATH=${PATH}:/usr/local/opt/gettext/bin
+        export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
+        export LDFLAGS="-L/usr/local/opt/libxml2/lib"
+        export CPPFLAGS="-I/usr/local/opt/xml2/include"
+    - name: Setup clang
       run: |
         echo 'CC=clang' >> $GITHUB_ENV
         echo 'CXX=clang++' >> $GITHUB_ENV
-    - name: Setup gcc (Linux)
-      if: runner.os == 'Linux' && matrix.compiler == 'gcc'
-      run: |
-        echo 'CC=gcc-11' >> $GITHUB_ENV
-        echo 'CXX=g++-11' >> $GITHUB_ENV
-    - name: Setup gcc (MacOS)
-      if: runner.os == 'macOS' && matrix.compiler == 'gcc'
-      run: |
-        echo 'CC=gcc' >> $GITHUB_ENV
-        echo 'CXX=g++' >> $GITHUB_ENV
     - name: Libtool
       run: |
-        autoreconf -i
-    - name: Configure autotools (Linux)
-      if: runner.os == 'Linux'
+        autoreconf -i /opt/homebrew/share/aclocal/
+    - name: Use Makefile
       run: |
-        ./configure \
-          CPPFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" \
-          ARIA2_STATIC=yes
-    - name: Configure autotools (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        ./configure \
-          --without-openssl --without-gnutls --with-appletls \
-          --disable-nls \
-          CPPFLAGS="-fsanitize=address" LDFLAGS="-fsanitize=address" \
-          ARIA2_STATIC=yes
-    - name: Build aria2
-      run: |
-        make -j"$(nproc 2> /dev/null || sysctl -n hw.ncpu)" check
-    - name: Rename file(Linux)
-      if: runner.os == 'Linux'
-      run: |
-        pwd && ls && mv src/aria2c aria2c-linux
-    - name: Rename file(macOS)
-      if: runner.os == 'macOS'
-      run: | 
-        pwd && ls && mv src/aria2c aria2c-macos
-    - name: Upload Artifact(Linux)
+        mkdir build-release
+        cd build-release
+        python3 -m venv .
+        source bin/activate
+        pip install sphinx-build
+        ln -s ../makerelease-os.mk Makefile
+        make
+    - name: Upload Artifact
       uses: actions/upload-artifact@v3
-      if: runner.os == 'Linux'
       with: 
         name: upload-binary
-        path: aria2c-linux
-    - name: Upload Artifact(macOS)
-      uses: actions/upload-artifact@v3
-      if: runner.os == 'macOS'
-      with: 
-        name: upload-binary
-        path: aria2c-macos
+        path: aria2/bin/aria2c
