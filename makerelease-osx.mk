@@ -379,14 +379,11 @@ all:: dist.build
 clean-dist:
 	rm -rf $(ARIA2_DIST).tar.bz2
 
-clean: clean-dist
-	rm -rf *aria2*
-
-cleaner: clean
+cleaner: clean-dist
 	rm -rf *.build *.check *.stamp $(ARCHLIBS) $(NONARCHLIBS) arch *.x86_64
 
 really-clean: cleaner
 	rm -rf *.tar.*
 
 
-.PHONY: all multi clean-dist clean cleaner really-clean
+.PHONY: all multi clean-dist cleaner really-clean
