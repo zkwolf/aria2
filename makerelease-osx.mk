@@ -195,8 +195,8 @@ ARIA2_CONFFLAGS = \
         --without-openssl \
         --without-libnettle \
         --without-libxml2 \
-				LIBGMP_CFLAGS="-I/usr/local/include"
-				LIBGMP_LIBS="-L/usr/local/lib"
+				LIBGMP_CFLAGS="-I/usr/local/include" \
+				LIBGMP_LIBS="-L/usr/local/lib" \
         ARIA2_STATIC=yes
 ARIA2_DOCDIR = $(ARIA2_PREFIX)/share/doc/aria2
 ARIA2_DOCS = \
